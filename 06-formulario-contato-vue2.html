@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulário de Contato com Vue.js</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f6f8fa;
+      margin: 40px;
+    }
+    .form-container {
+      max-width: 400px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    .erro {
+      color: red;
+      font-size: 13px;
+      margin-top: 3px;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 15px;
+      background-color: #2c3e50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+    button:hover {
+      background-color: #1a252f;
+    }
+    .resultado {
+      margin-top: 20px;
+      background: #e8f5e9;
+      border-left: 4px solid #4caf50;
+      padding: 10px;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="form-container">
+    <h2>Formulário de Contato</h2>
+    <form @submit.prevent="enviarFormulario">
+      <label>Nome:</label>
+      <input type="text" v-model="nome">
+      <div v-if="erros.nome" class="erro">{{ erros.nome }}</div>
+
+      <label>E-mail:</label>
+      <input type="email" v-model="email">
+      <div v-if="erros.email" class="erro">{{ erros.email }}</div>
+
+      <label>Mensagem:</label>
+      <textarea rows="4" v-model="mensagem"></textarea>
+      <div v-if="erros.mensagem" class="erro">{{ erros.mensagem }}</div>
+
+      <button type="submit">Enviar</button>
+    </form>
+
+    <div v-if="enviado" class="resultado">
+      <h3>Mensagem enviada com sucesso!</h3>
+      <p><strong>Nome:</strong> {{ nome }}</p>
+      <p><strong>E-mail:</strong> {{ email }}</p>
+      <p><strong>Mensagem:</strong> {{ mensagem }}</p>
+    </div>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        nome: '',
+        email: '',
+        mensagem: '',
+        erros: {},
+        enviado: false
+      },
+      methods: {
+        enviarFormulario() {
+          this.erros = {};
+          this.enviado = false;
+
+          if (!this.nome.trim()) {
+            this.erros.nome = 'O nome deve ser informado.';
+          }
+          if (!this.email.trim()) {
+            this.erros.email = 'O e-mail deve ser informado.';
+          }
+          if (!this.mensagem.trim()) {
+            this.erros.mensagem = 'A mensagem deve ser informada.';
+          }
+
+          if (Object.keys(this.erros).length === 0) {
+            this.enviado = true;
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

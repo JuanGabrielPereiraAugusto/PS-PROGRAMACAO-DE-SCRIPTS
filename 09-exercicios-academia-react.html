@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exercícios</title>
+
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-900 text-white">
+  <div id="root"></div>
+
+  <script type="text/babel">
+
+    function App() {
+
+      const [search, setSearch] = React.useState("");
+      const [tipoFiltro, setTipoFiltro] = React.useState("Todos");
+      const [difFiltro, setDifFiltro] = React.useState("Todos");
+      const [modalData, setModalData] = React.useState(null);
+
+      const [exercicios, setExercicios] = React.useState([
+        { nome: "Supino Reto", tipo: "Peito", dificuldade: "Médio", descricao: "Exercício clássico para trabalhar o peitoral maior." },
+        { nome: "Supino Inclinado", tipo: "Peito", dificuldade: "Médio", descricao: "Foca na parte superior do peitoral." },
+        { nome: "Agachamento Livre", tipo: "Pernas", dificuldade: "Difícil", descricao: "Um dos exercícios mais completos para pernas." },
+        { nome: "Leg Press", tipo: "Pernas", dificuldade: "Médio", descricao: "Ótimo para quadríceps e glúteos." },
+        { nome: "Rosca Direta", tipo: "Braços", dificuldade: "Fácil", descricao: "Trabalha diretamente o bíceps." },
+        { nome: "Tríceps Testa", tipo: "Braços", dificuldade: "Médio", descricao: "Isolamento excelente para tríceps." },
+        { nome: "Remada Curvada", tipo: "Costas", dificuldade: "Médio", descricao: "Foco em dorsais e lombar." },
+        { nome: "Puxada Alta", tipo: "Costas", dificuldade: "Fácil", descricao: "Trabalha as costas de forma acessível." },
+        { nome: "Desenvolvimento Militar", tipo: "Ombros", dificuldade: "Médio", descricao: "Exercício composto para ombros." },
+        { nome: "Elevação Lateral", tipo: "Ombros", dificuldade: "Fácil", descricao: "Isolamento para deltoide lateral." },
+      ]);
+
+      // Campos do formulário
+      const [novoNome, setNovoNome] = React.useState("");
+      const [novoTipo, setNovoTipo] = React.useState("Peito");
+      const [novaDif, setNovaDif] = React.useState("Fácil");
+      const [novaDesc, setNovaDesc] = React.useState("");
+
+      function adicionarExercicio() {
+        if (novoNome.trim() === "" || novaDesc.trim() === "") {
+          alert("Preencha nome e descrição!");
+          return;
+        }
+
+        const novo = {
+          nome: novoNome,
+          tipo: novoTipo,
+          dificuldade: novaDif,
+          descricao: novaDesc
+        };
+
+        setExercicios([...exercicios, novo]);
+
+        setNovoNome("");
+        setNovaDesc("");
+      }
+
+      // FILTROS
+      const filtrados = exercicios.filter((e) => {
+        const nomeOK = e.nome.toLowerCase().includes(search.toLowerCase());
+        const tipoOK = tipoFiltro === "Todos" || e.tipo === tipoFiltro;
+        const difOK = difFiltro === "Todos" || e.dificuldade === difFiltro;
+        return nomeOK && tipoOK && difOK;
+      });
+
+      const Modal = ({ item }) => {
+        if (!item) return null;
+
+        return (
+          <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center p-6">
+            <div className="bg-gray-800 p-6 rounded-2xl max-w-md w-full shadow-xl">
+              <h2 className="text-2xl font-bold mb-3">{item.nome}</h2>
+              <p className="text-gray-300 mb-2"><b>Tipo:</b> {item.tipo}</p>
+              <p className="text-gray-300 mb-2"><b>Dificuldade:</b> {item.dificuldade}</p>
+              <p className="text-gray-200 mb-4">{item.descricao}</p>
+
+              <button 
+                className="w-full bg-red-500 mt-2 py-2 rounded-xl hover:bg-red-600"
+                onClick={() => setModalData(null)}
+              >
+                Fechar
+              </button>
+            </div>
+          </div>
+        );
+      };
+
+      return (
+        <div className="p-6">
+
+          <h1 className="text-4xl font-bold mb-10 text-center">
+            🔎 Buscar Exercícios / ➕ Adicionar Exercícios
+          </h1>
+
+          {/* Formulário */}
+          <div className="max-w-3xl mx-auto bg-gray-800 p-6 rounded-2xl shadow-xl mb-10">
+            <h2 className="text-xl font-bold mb-4">Adicionar Novo Exercício</h2>
+
+            <input 
+              className="w-full p-3 text-black rounded-xl mb-3"
+              placeholder="Nome do exercício"
+              value={novoNome}
+              onChange={(e) => setNovoNome(e.target.value)}
+            />
+
+            <select 
+              className="w-full p-3 text-black rounded-xl mb-3"
+              value={novoTipo}
+              onChange={(e) => setNovoTipo(e.target.value)}
+            >
+              <option>Peito</option>
+              <option>Pernas</option>
+              <option>Braços</option>
+              <option>Costas</option>
+              <option>Ombros</option>
+            </select>
+
+            <select 
+              className="w-full p-3 text-black rounded-xl mb-3"
+              value={novaDif}
+              onChange={(e) => setNovaDif(e.target.value)}
+            >
+              <option>Fácil</option>
+              <option>Médio</option>
+              <option>Difícil</option>
+            </select>
+
+            <textarea
+              className="w-full p-3 text-black rounded-xl mb-3"
+              placeholder="Descrição"
+              value={novaDesc}
+              onChange={(e) => setNovaDesc(e.target.value)}
+            />
+
+            <button 
+              className="w-full bg-green-500 py-3 rounded-xl hover:bg-green-600 text-lg"
+              onClick={adicionarExercicio}
+            >
+              Adicionar ➕
+            </button>
+          </div>
+
+          {/* Busca */}
+          <div className="max-w-xl mx-auto mb-8">
+            <input
+              className="w-full p-3 rounded-xl text-black"
+              placeholder="Digite o nome do exercício..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+
+          {/* Filtros */}
+          <div className="max-w-3xl mx-auto flex flex-col md:flex-row gap-4 mb-10">
+            <select
+              className="p-3 text-black rounded-xl w-full"
+              value={tipoFiltro}
+              onChange={(e) => setTipoFiltro(e.target.value)}
+            >
+              <option>Todos</option>
+              <option>Peito</option>
+              <option>Pernas</option>
+              <option>Braços</option>
+              <option>Costas</option>
+              <option>Ombros</option>
+            </select>
+
+            <select
+              className="p-3 text-black rounded-xl w-full"
+              value={difFiltro}
+              onChange={(e) => setDifFiltro(e.target.value)}
+            >
+              <option>Todos</option>
+              <option>Fácil</option>
+              <option>Médio</option>
+              <option>Difícil</option>
+            </select>
+          </div>
+
+          {/* Lista */}
+          <div className="max-w-4xl mx-auto bg-gray-800 p-6 rounded-2xl shadow-xl">
+            <h2 className="text-xl font-semibold mb-4">Resultados</h2>
+
+            <ul className="space-y-4">
+              {filtrados.map((e, index) => (
+                <li
+                  key={index}
+                  className="bg-gray-700 p-4 rounded-xl flex justify-between items-center hover:bg-gray-600 transition"
+                >
+                  <div>
+                    <p className="text-lg font-bold">{e.nome}</p>
+                    <p className="text-sm text-gray-300">Tipo: {e.tipo}</p>
+                    <p className="text-sm text-gray-300">Dificuldade: {e.dificuldade}</p>
+                  </div>
+
+                  <button
+                    className="bg-blue-500 px-4 py-2 rounded-xl hover:bg-blue-600"
+                    onClick={() => setModalData(e)}
+                  >
+                    Ver Detalhes
+                  </button>
+                </li>
+              ))}
+            </ul>
+
+            {filtrados.length === 0 && (
+              <p className="text-center text-gray-400 mt-6">Nenhum exercício encontrado...</p>
+            )}
+          </div>
+
+          <Modal item={modalData} />
+
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
+  </script>
+</body>
+</html>

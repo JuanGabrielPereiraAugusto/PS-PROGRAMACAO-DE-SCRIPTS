@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formulário de Contato Vue.js</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+    }
+    form {
+      max-width: 400px;
+      margin-bottom: 20px;
+    }
+    input, textarea {
+      width: 100%;
+      margin-bottom: 5px;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .erro {
+      color: red;
+      font-size: 0.9em;
+      margin-bottom: 10px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      max-width: 600px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h2>Formulário de Contato</h2>
+
+    <form @submit.prevent="enviarFormulario">
+      <label>Nome:</label>
+      <input type="text" v-model="form.nome">
+      <div class="erro" v-if="erros.nome">{{ erros.nome }}</div>
+
+      <label>E-mail:</label>
+      <input type="email" v-model="form.email">
+      <div class="erro" v-if="erros.email">{{ erros.email }}</div>
+
+      <label>Mensagem:</label>
+      <textarea rows="4" v-model="form.mensagem"></textarea>
+      <div class="erro" v-if="erros.mensagem">{{ erros.mensagem }}</div>
+
+      <button type="submit">Enviar</button>
+    </form>
+
+    <!-- Tabela de listagem -->
+    <table v-if="mensagens.length > 0">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>E-mail</th>
+          <th>Mensagem</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(item, index) in mensagens" :key="index">
+          <td>{{ item.nome }}</td>
+          <td>{{ item.email }}</td>
+          <td>{{ item.mensagem }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          form: {
+            nome: '',
+            email: '',
+            mensagem: ''
+          },
+          erros: {},
+          mensagens: []
+        }
+      },
+      methods: {
+        enviarFormulario() {
+          this.erros = {};
+
+          // Validação manual
+          if (!this.form.nome) this.erros.nome = 'O nome deve ser informado.';
+          if (!this.form.email) this.erros.email = 'O e-mail deve ser informado.';
+          if (!this.form.mensagem) this.erros.mensagem = 'A mensagem deve ser informada.';
+
+          // Se houver erros, interrompe o envio
+          if (Object.keys(this.erros).length > 0) return;
+
+          // Adiciona os dados na tabela
+          this.mensagens.push({ ...this.form });
+
+          // Limpa o formulário
+          this.form.nome = '';
+          this.form.email = '';
+          this.form.mensagem = '';
+        }
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projeto HTML e JavaScript</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #18122B;
+      color: #A259F7;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: linear-gradient(90deg, #A259F7 0%, #5D3891 100%);
+      color: #fff;
+      text-align: center;
+      padding: 1.5rem 0;
+      box-shadow: 0 2px 8px rgba(162,89,247,0.2);
+    }
+
+    main {
+      max-width: 800px;
+      margin: 2rem auto;
+      background: #231942;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(162,89,247,0.15);
+      padding: 2rem;
+    }
+
+    h2, h1 {
+      color: #ffffff;
+      text-shadow: 0 2px 8px #5D3891;
+    }
+
+    select, button {
+      font-size: 1rem;
+      padding: 0.5rem;
+      margin: 0.5rem 0;
+      border-radius: 5px;
+      border: 1px solid #A259F7;
+      background: #18122B;
+      color: #A259F7;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      box-shadow: 0 0 4px #5D3891;
+    }
+
+    button {
+      cursor: pointer;
+      background: linear-gradient(90deg, #A259F7 0%, #5D3891 100%);
+      color: #fff;
+      border: none;
+      font-weight: bold;
+      box-shadow: 0 2px 8px rgba(162,89,247,0.2);
+    }
+
+    button:hover {
+      background: linear-gradient(90deg, #5D3891 0%, #A259F7 100%);
+      box-shadow: 0 4px 16px rgba(162,89,247,0.3);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+      background: #18122B;
+      color: #A259F7;
+      box-shadow: 0 0 8px #5D3891;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th, td {
+      border: 1px solid #5D3891;
+      padding: 0.8rem;
+      text-align: left;
+    }
+
+    th {
+      background: #5D3891;
+      color: #fff;
+      font-weight: bold;
+    }
+    tr:nth-child(even) td {
+      background: #231942;
+    }
+
+    tr:nth-child(odd) td {
+      background: #18122B;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 2rem;
+      color: #ffffff;
+      font-size: 0.9rem;
+      background: #231942;
+      padding: 1rem 0;
+      border-top: 1px solid #5D3891;
+      box-shadow: 0 -2px 8px rgba(162,89,247,0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Projeto: HTML e JavaScript</h1>
+  </header>
+
+  <main>
+    <section>
+      <h2>Escolha uma pergunta:</h2>
+      <select id="pergunta">
+        <option value="">Selecione...</option>
+        <option value="html">Qual o propósito da linguagem HTML?</option>
+        <option value="js">Qual o propósito da linguagem JavaScript?</option>
+        <option value="funcao">O que são funções e como elas são definidas na linguagem JavaScript?</option>
+      </select>
+      <br>
+      <button onclick="mostrarResposta()">Mostrar Resposta</button>
+      <button onclick="limpar()">Limpar Histórico</button>
+    </section>
+
+    <section>
+      <table id="historico">
+        <thead>
+          <tr>
+            <th>Pergunta</th>
+            <th>Resposta</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    <p>Desenvolvido por Juan Gabriel Pereira Augusto e Daniel Freire Kim</p>
+  </footer>
+
+  <script>
+    // Função que mostra a resposta e adiciona à tabela
+    function mostrarResposta() {
+      var select = document.getElementById("pergunta");
+      var valor = select.value;
+      var texto = select.options[select.selectedIndex].text;
+      var resposta = "";
+
+      if (valor === "html") {
+        resposta = "O propósito da linguagem HTML é estruturar os conteúdos de uma página web.";
+      } else if (valor === "js") {
+        resposta = "O propósito da linguagem JavaScript é adicionar funcionalidades ao código HTML.";
+      } else if (valor === "funcao") {
+        resposta = "As funções são blocos de código que realizam uma tarefa específica e podem ser reutilizadas no código.";
+      } else {
+        alert("Por favor, selecione uma pergunta!");
+        return;
+      }
+
+      // Adiciona nova linha na tabela
+      var tabela = document.getElementById("historico").getElementsByTagName("tbody")[0];
+      var novaLinha = tabela.insertRow();
+      var celulaPergunta = novaLinha.insertCell(0);
+      var celulaResposta = novaLinha.insertCell(1);
+
+      celulaPergunta.textContent = texto;
+      celulaResposta.textContent = resposta;
+    }
+
+    // Função que limpa o histórico
+    function limpar() {
+      var tabela = document.getElementById("historico").getElementsByTagName("tbody")[0];
+      tabela.innerHTML = "";
+    }
+  </script>
+
+</body>
+</html>
